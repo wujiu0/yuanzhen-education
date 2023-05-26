@@ -132,7 +132,7 @@ export default defineComponent({
     onSubmit(values) {
       this.dialogShow = false;
       console.log('submit', values);
-      axios.post('http://localhost:8080/user/save', values)
+      axios.post('http://123.57.0.23:8090/user/save', values)
           .then((response) => {
             if (response.data.code === 1) {
               localStorage.setItem('phone', this.userInfo.phone);
@@ -148,7 +148,7 @@ export default defineComponent({
     },
     queryInfo() {
       console.log('initInfo this.userInfo.phone', this.userInfo.phone);
-      axios.get('http://localhost:8080/user/query?phone=' + this.userInfo.phone)
+      axios.get('http://123.57.0.23:8090/user/query?phone=' + this.userInfo.phone)
           .then((response) => {
             console.log(response.data);
             if (response.data.code === 1) {
@@ -190,14 +190,14 @@ export default defineComponent({
   height: 200vh;
 }
 
-@media (min-width: 1200px) {
-  #bg-container {
-    display: inline-block;
-    background-size: 696px 100vh;
-    width: 100%;
-    height: 200vh;
-  }
-}
+//@media (min-width: 1200px) {
+//  #bg-container {
+//    display: inline-block;
+//    background-size: 696px 100vh;
+//    width: 100%;
+//    height: 200vh;
+//  }
+//}
 
 .tips {
   position: absolute;
