@@ -18,7 +18,18 @@
             </van-radio-group>
           </template>
         </van-field>
-
+        <van-field
+            v-model="userInfo.nianji"
+            name="nianji"
+            label="年级"
+            :rules="[{ required: true, message: '请填写年级' }]"
+        />
+        <van-field
+            v-model="userInfo.banji"
+            name="banji"
+            label="班级"
+            :rules="[{ required: true, message: '请填写班级' }]"
+        />
         <van-field
             v-model="userInfo.phone"
             type="tel"
@@ -69,18 +80,26 @@
         style="white-space: pre-wrap"
     >
       <div style="font-weight: bold">线上抽奖，来参观学校即可领奖，元贞陪你过六一</div>
-      <div>奖品如下：</div>
+      <div style="font-weight: bold">奖品如下：</div>
       <div>一等奖：iPad</div>
       <div>二等奖：拍立得。</div>
       <div>三等奖：可托运行李箱。</div>
       <div>四等奖：保温杯。</div>
       <div>五等奖：小风扇/泡泡机/娃哈哈一排/晴雨两用伞</div>
       <div>参与奖：速记手册/笔记本套盒纪念品</div>
-      <div>活动时间：2023.5.26-2023.6.4</div>
+      <div><span style="font-weight: bold">活动时间：</span>2023.5.26-2023.6.4</div>
+      <div><span style="font-weight: bold">兑奖日期：</span>抽奖后一周内凭中奖截图和学生证领取对应奖品，过期无效</div>
+      <div>实名认证每人只能兑换一次奖品</div>
     </van-popup>
     <van-popup v-model="awardsShow" round closeable class="pop-tips" style="white-space: pre-wrap">
       <div>
         姓名：<span>{{ userInfo.name }}</span>
+      </div>
+      <div>
+        年级：<span>{{ userInfo.nianji }}</span>
+      </div>
+      <div>
+        班级：<span>{{ userInfo.banji }}</span>
       </div>
       <div>
         电话：<span>{{ userInfo.phone }}</span>
@@ -110,6 +129,8 @@ export default defineComponent({
         name: '',
         sex: '',
         phone: '17878787878',
+        nianji: '',
+        banji: '',
         lottery: '',
         lotteryList: [],
       },
@@ -142,7 +163,7 @@ export default defineComponent({
             }
           })
           .catch((error) => {
-            Dialog({message: '~奖品已经抽完了喔~'});
+            Dialog({message: '很遗憾，你没有中奖，明天再来试试吧~'});
             console.log(error);
           });
     },
@@ -190,14 +211,6 @@ export default defineComponent({
   height: 200vh;
 }
 
-//@media (min-width: 1200px) {
-//  #bg-container {
-//    display: inline-block;
-//    background-size: 696px 100vh;
-//    width: 100%;
-//    height: 200vh;
-//  }
-//}
 
 .tips {
   position: absolute;
