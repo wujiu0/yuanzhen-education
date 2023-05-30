@@ -179,7 +179,7 @@ export default defineComponent({
     onSubmit(values) {
       this.dialogShow = false;
       console.log('submit', values);
-      axios.post('https://localhost:8500/user/save', values)
+      axios.post('https://123.57.0.23:8500/user/save', values)
           .then((response) => {
             if (response.data.code === 1) {
               localStorage.setItem('phone', this.userInfo.phone);
@@ -196,7 +196,7 @@ export default defineComponent({
     },
     queryInfo() {
       console.log('initInfo this.userInfo.phone', this.userInfo.phone);
-      axios.get('https://localhost:8500/user/query?phone=' + this.userInfo.phone)
+      axios.get('https://123.57.0.23:8500/user/query?phone=' + this.userInfo.phone)
           .then((response) => {
             console.log(response.data);
             if (response.data.code === 1) {
@@ -225,7 +225,7 @@ export default defineComponent({
         message: '发送中...',
         forbidClick: true,
       });
-      axios.get('https://localhost:8500/user/sms?email=' + this.userInfo.email)
+      axios.get('https://123.57.0.23:8500/user/sms?email=' + this.userInfo.email)
           .then(() => {
             Toast.clear();
             Toast('发送成功')
