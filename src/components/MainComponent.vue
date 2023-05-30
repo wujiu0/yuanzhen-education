@@ -8,7 +8,7 @@
             v-model="userInfo.name"
             name="name"
             label="姓名"
-            :rules="[{ required: true, message: '请填写姓名' }]"
+            :rules="[{ required: true, message: '请填写姓名' },{ pattern: /^[\u4E00-\u9FFF]{1,5}$/, message: '请输入正确的姓名' }]"
         />
         <van-field name="sex" label="性别">
           <template #input>
@@ -40,6 +40,29 @@
             { pattern: /^1[3-9][0-9]{9}$/, message: '手机号格式有误' },
           ]"
         />
+        <van-field
+            v-model="userInfo.email"
+            label="邮箱"
+            name="email"
+            :rules="[
+            { required: true, message: '请填写邮箱' },
+            { pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, message: '邮箱格式有误' },
+          ]"
+        />
+        <van-field
+            v-model="sms"
+            name="sms"
+            center
+            clearable
+            label="验证码"
+            :rules="[{ required: true, message: '请填写验证码' }]"
+        >
+          <template #button>
+            <van-button size="small" type="primary" @click.prevent="sendSms">
+              发送验证码
+            </van-button>
+          </template>
+        </van-field>
         <div>
           <van-button class="dialog-btn" round @click.prevent="dialogShow = false">取消</van-button>
           <van-button class="dialog-btn" round type="info" native-type="submit"
@@ -114,7 +137,7 @@
 <script>
 import {defineComponent} from 'vue';
 import axios from 'axios';
-import {Dialog} from 'vant';
+import {Dialog, Toast} from 'vant';
 
 export default defineComponent({
   name: 'MainComponent',
@@ -131,9 +154,12 @@ export default defineComponent({
         phone: '17878787878',
         nianji: '',
         banji: '',
+        email: '',
         lottery: '',
         lotteryList: [],
       },
+      sms: '',
+      time: 0,
       awardsMap: {
         '1': '一等奖',
         '2': '二等奖',
@@ -153,12 +179,13 @@ export default defineComponent({
     onSubmit(values) {
       this.dialogShow = false;
       console.log('submit', values);
-      axios.post('http://123.57.0.23:8090/user/save', values)
+      axios.post('https://localhost:8500/user/save', values)
           .then((response) => {
             if (response.data.code === 1) {
               localStorage.setItem('phone', this.userInfo.phone);
               Dialog({message: '恭喜你获得了' + this.awardsMap[response.data.data]});
             } else {
+              this.dialogShow = true;
               Dialog({message: response.data.msg});
             }
           })
@@ -169,7 +196,7 @@ export default defineComponent({
     },
     queryInfo() {
       console.log('initInfo this.userInfo.phone', this.userInfo.phone);
-      axios.get('http://123.57.0.23:8090/user/query?phone=' + this.userInfo.phone)
+      axios.get('https://localhost:8500/user/query?phone=' + this.userInfo.phone)
           .then((response) => {
             console.log(response.data);
             if (response.data.code === 1) {
@@ -192,6 +219,21 @@ export default defineComponent({
       }
 
     },
+    sendSms() {
+      Toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '发送中...',
+        forbidClick: true,
+      });
+      axios.get('https://localhost:8500/user/sms?email=' + this.userInfo.email)
+          .then(() => {
+            Toast.clear();
+            Toast('发送成功')
+          })
+          .catch(() => {
+            Toast('发送失败，请稍后再试')
+          })
+    }
   },
   mounted() {
     console.log(localStorage.getItem('phone'));

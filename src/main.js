@@ -7,7 +7,9 @@ import {RadioGroup, Radio} from 'vant';
 import {Cell, CellGroup} from 'vant';
 import {Button} from 'vant';
 import {Dialog} from 'vant';
+import {Toast} from 'vant';
 
+Vue.use(Toast);
 Vue.use(Dialog);
 Vue.use(Button);
 Vue.use(Form);
